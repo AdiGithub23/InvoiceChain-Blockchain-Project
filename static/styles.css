@@ -1,0 +1,70 @@
+/* body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+}
+
+.container {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 400px;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: #f6851b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: #e2761b;
+}
+
+.hidden {
+    display: none;
+}
+
+.status-text {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555;
+    word-break: break-all;
+} */
+
+
+
+
+
+
+
+body { font-family: sans-serif; background: #f4f4f9; display: flex; justify-content: center; padding: 20px; }
+.container { background: white; padding: 2rem; border-radius: 10px; width: 450px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+h1 { margin-bottom: 5px; text-align: center; }
+.subtitle { text-align: center; color: #777; margin-bottom: 20px; }
+
+/* Buttons */
+.btn-primary { background: #f6851b; color: white; border: none; padding: 10px; width: 100%; font-size: 16px; cursor: pointer; border-radius: 5px; }
+.btn-action { background: #007bff; color: white; border: none; padding: 10px; width: 100%; margin-top: 10px; cursor: pointer; border-radius: 5px; }
+.btn-secondary { background: #6c757d; color: white; border: none; padding: 8px; width: 30%; cursor: pointer; border-radius: 5px; }
+.btn-small { background: #eee; border: none; padding: 5px 10px; cursor: pointer; float: right; }
+
+/* Inputs */
+input { width: 93%; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 5px; }
+.card { background: #fafafa; border: 1px solid #eee; padding: 15px; margin-bottom: 15px; border-radius: 8px; }
+
+/* Helpers */
+.hidden { display: none; }
+.status-text { margin-top: 10px; font-size: 13px; text-align: center; min-height: 20px;}
+.invoice-list { list-style: none; padding: 0; margin-top: 10px; }
+.invoice-list li { background: #fff; padding: 8px; border-bottom: 1px solid #eee; }
+.result-box { margin-top: 10px; padding: 10px; border-radius: 5px; font-size: 14px; }

@@ -1,0 +1,77 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract InvoiceChain {
+
+    struct Invoice {
+        string id;
+        string clientName;
+        uint256 amount;
+        string date;
+        string ipfsHash;
+        address issuer;
+    }
+
+    // 1. CHANGED: Maps ID to a LIST (Array) of Invoices
+    mapping(string => Invoice[]) private invoices;
+    
+    // 2. NEW: Maps IPFS Hash to Boolean (True = Used)
+    mapping(string => bool) private fileHashUsed;
+    
+    mapping(address => string[]) private userInvoiceIds;
+
+    event InvoiceCreated(string indexed id, address indexed issuer);
+
+    function addInvoice(string memory _id, string memory _client, uint256 _amount, string memory _date, string memory _ipfsHash) public {
+        // 1. CHANGED: Check File Hash Uniqueness instead of ID
+        require(fileHashUsed[_ipfsHash] == false, "Error: This File has already been uploaded.");
+
+        Invoice memory newInvoice = Invoice({
+            id: _id,
+            clientName: _client,
+            amount: _amount,
+            date: _date,
+            ipfsHash: _ipfsHash,
+            issuer: msg.sender
+        });
+
+        // 2. CHANGED: Push to the array (Allow duplicates IDs)
+        invoices[_id].push(newInvoice);
+        
+        // Mark file as used
+        fileHashUsed[_ipfsHash] = true;
+        
+        userInvoiceIds[msg.sender].push(_id);
+        emit InvoiceCreated(_id, msg.sender);
+    }
+
+    function getMyInvoiceIds() public view returns (string[] memory) {
+        return userInvoiceIds[msg.sender];
+    }
+
+    // 3. CHANGED: Returns a LIST of invoices
+    function getInvoice(string memory _id) public view returns (Invoice[] memory) {
+        // Retrieve all invoices with this ID
+        Invoice[] memory allMatches = invoices[_id];
+        
+        // Count how many belong to the caller (msg.sender)
+        uint256 count = 0;
+        for (uint256 i = 0; i < allMatches.length; i++) {
+            if (allMatches[i].issuer == msg.sender) {
+                count++;
+            }
+        }
+
+        // Create a filtered list
+        Invoice[] memory myInvoices = new Invoice[](count);
+        uint256 j = 0;
+        for (uint256 i = 0; i < allMatches.length; i++) {
+            if (allMatches[i].issuer == msg.sender) {
+                myInvoices[j] = allMatches[i];
+                j++;
+            }
+        }
+        
+        return myInvoices;
+    }
+}

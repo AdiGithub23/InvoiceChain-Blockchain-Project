@@ -1,0 +1,69 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract InvoiceChain {
+
+    // 1. Define what an Invoice looks like
+    struct Invoice {
+        string id;          // e.g., "INV-001"
+        string clientName;  // e.g., "Acme Corp"
+        uint256 amount;     // e.g., 5000
+        string date;        // e.g., "2026-01-21"
+        address issuer;     // The wallet address of the person who created it
+    }
+
+    // 2. Storage (The Database)
+    // Maps an ID to the Invoice details
+    mapping(string => Invoice) private invoices;
+    
+    // Maps an ID to whether it exists (to prevent duplicates)
+    mapping(string => bool) private invoiceExists;
+    
+    // Maps a User's Wallet Address to a list of their Invoice IDs
+    mapping(address => string[]) private userInvoiceIds;
+
+    // 3. Events (To log actions on the blockchain)
+    event InvoiceCreated(string indexed id, address indexed issuer);
+
+    // --- FUNCTIONS ---
+
+    // Function A: Add a new Invoice
+    function addInvoice(string memory _id, string memory _client, uint256 _amount, string memory _date) public {
+        // Check 1: Ensure ID doesn't already exist
+        require(invoiceExists[_id] == false, "Error: Invoice ID already exists.");
+
+        // Create the invoice
+        Invoice memory newInvoice = Invoice({
+            id: _id,
+            clientName: _client,
+            amount: _amount,
+            date: _date,
+            issuer: msg.sender // 'msg.sender' is the wallet calling this function
+        });
+
+        // Save to storage
+        invoices[_id] = newInvoice;
+        invoiceExists[_id] = true;
+        userInvoiceIds[msg.sender].push(_id);
+
+        // Emit an event
+        emit InvoiceCreated(_id, msg.sender);
+    }
+
+    // Function B: Get My Invoices (Returns list of IDs)
+    function getMyInvoiceIds() public view returns (string[] memory) {
+        return userInvoiceIds[msg.sender];
+    }
+
+    // Function C: Get Specific Invoice Details
+    // STRICT RULE: Only the issuer can see the details!
+    function getInvoice(string memory _id) public view returns (string memory, uint256, string memory, address) {
+        require(invoiceExists[_id] == true, "Error: Invoice not found.");
+        
+        // Security Check: Is the caller the owner?
+        require(invoices[_id].issuer == msg.sender, "Access Denied: You are not the issuer.");
+
+        Invoice memory i = invoices[_id];
+        return (i.clientName, i.amount, i.date, i.issuer);
+    }
+}
