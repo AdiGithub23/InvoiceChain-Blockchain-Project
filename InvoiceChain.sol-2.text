@@ -1,0 +1,54 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract InvoiceChain {
+
+    struct Invoice {
+        string id;
+        string clientName;
+        uint256 amount;
+        string date;
+        string ipfsHash; // <--- NEW: Stores the file address
+        address issuer;
+    }
+
+    mapping(string => Invoice) private invoices;
+    mapping(string => bool) private invoiceExists;
+    mapping(address => string[]) private userInvoiceIds;
+
+    event InvoiceCreated(string indexed id, address indexed issuer);
+
+    // Update: Accept _ipfsHash as an argument
+    function addInvoice(string memory _id, string memory _client, uint256 _amount, string memory _date, string memory _ipfsHash) public {
+        require(invoiceExists[_id] == false, "Error: Invoice ID already exists.");
+
+        Invoice memory newInvoice = Invoice({
+            id: _id,
+            clientName: _client,
+            amount: _amount,
+            date: _date,
+            ipfsHash: _ipfsHash, // <--- NEW: Save it
+            issuer: msg.sender
+        });
+
+        invoices[_id] = newInvoice;
+        invoiceExists[_id] = true;
+        userInvoiceIds[msg.sender].push(_id);
+
+        emit InvoiceCreated(_id, msg.sender);
+    }
+
+    function getMyInvoiceIds() public view returns (string[] memory) {
+        return userInvoiceIds[msg.sender];
+    }
+
+    // Update: Return the ipfsHash
+    function getInvoice(string memory _id) public view returns (string memory, uint256, string memory, string memory, address) {
+        require(invoiceExists[_id] == true, "Error: Invoice not found.");
+        require(invoices[_id].issuer == msg.sender, "Access Denied: You are not the issuer.");
+
+        Invoice memory i = invoices[_id];
+        // Returns: Client, Amount, Date, IPFS Hash, Issuer
+        return (i.clientName, i.amount, i.date, i.ipfsHash, i.issuer);
+    }
+}

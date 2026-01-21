@@ -1,0 +1,29 @@
+uv venv _ethinvauth
+
+_ethinvauth\Scripts\activate
+
+uv pip install -r requirements.txt
+
+uvicorn main:app
+uvicorn main:app --reload
+
+TESTS:
+
+INV-1
+Client-A
+100
+[Date]
+[File]
+
+INV-2
+Client-B
+200
+[Date]
+[File]
+
+INV-3
+Client-C
+300
+[Date]
+[File]
+

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>InvoiceChain Authentication</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.11.1/ethers.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>InvoiceChain</h1>
+        <p class="subtitle">Decentralized Invoice Ledger</p>
+
+        <div id="auth-section">
+            <button id="connectWalletBtn" class="btn-primary">Connect Wallet</button>
+            <p id="walletAddress" class="status-text hidden">Not Connected</p>
+        </div>
+
+        <div id="dashboard-section" class="hidden">
+            <hr>
+
+            <div class="card">
+                <h3>Create New Invoice</h3>
+                <input type="text" id="inpId" placeholder="Invoice ID (e.g. INV-001)">
+                <input type="text" id="inpClient" placeholder="Client Name">
+                <input type="number" id="inpAmount" placeholder="Amount (ETH/USD)">
+                <input type="date" id="inpDate">
+                
+                <label style="font-size: 12px; color: #666;">Attach Invoice PDF/Image:</label>
+                <input type="file" id="inpFile">
+
+                <button id="submitInvoiceBtn" class="btn-action">Submit to Blockchain</button>
+                <p id="submitStatus" class="status-text"></p>
+            </div>
+
+            <div class="card">
+                <h3>Verify Invoice</h3>
+                <input type="text" id="searchId" placeholder="Enter Invoice ID">
+                <button id="verifyBtn" class="btn-secondary">Verify</button>
+                <div id="searchResult" class="result-box hidden"></div>
+            </div>
+
+            <div class="card">
+                <h3>My Invoices</h3>
+                <button id="refreshBtn" class="btn-small">Refresh List</button>
+                <ul id="invoiceList" class="invoice-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

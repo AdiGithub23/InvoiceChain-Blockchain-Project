@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+web3
+# python-multipart
+# sqlalchemy
+# pydantic
+# pytest
+# aiofiles
+# eth-hash
+
+python-dotenv
+# py-solc-x
