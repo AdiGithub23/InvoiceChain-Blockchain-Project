@@ -1,108 +1,147 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InvoiceChain Authentication</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.11.1/ethers.umd.min.js"></script>
-    
-    <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body>
-
-    <div class="container">
-        <h1>InvoiceChain</h1>
-        <p>Decentralized Invoice Authentication</p>
-
-        <div id="auth-section">
-            <button id="connectWalletBtn" class="btn-primary">Connect Wallet</button>
-            <p id="walletAddress" class="status-text hidden">Not Connected</p>
-        </div>
-
-        <div id="dashboard-section" class="hidden">
-            <hr>
-            <h2>My Dashboard</h2>
-            <p>Welcome, Issuer!</p>
-            </div>
-    </div>
-
-    <script src="/static/app.js"></script>
-</body>
-</html> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>InvoiceChain Authentication</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvoiceChain</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.11.1/ethers.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>InvoiceChain</h1>
-        <p class="subtitle">Decentralized Invoice Ledger</p>
+    <div class="bg-grid"></div>
 
-        <div id="auth-section">
-            <button id="connectWalletBtn" class="btn-primary">Connect Wallet</button>
-            <p id="walletAddress" class="status-text hidden">Not Connected</p>
-        </div>
+    <div class="page-wrapper">
+        <div class="container">
 
-        <div id="dashboard-section" class="hidden">
-            <hr>
-            
-            <!-- <div class="card">
-                <h3>📄 Create New Invoice</h3>
-                <input type="text" id="inpId" placeholder="Invoice ID (e.g. INV-001)">
-                <input type="text" id="inpClient" placeholder="Client Name">
-                <input type="number" id="inpAmount" placeholder="Amount (ETH/USD)">
-                <input type="date" id="inpDate">
-                <button id="submitInvoiceBtn" class="btn-action">Submit to Blockchain</button>
-                <p id="submitStatus" class="status-text"></p>
-            </div> -->
-            <div class="card">
-                <h3>Create New Invoice</h3>
-                <input type="text" id="inpId" placeholder="Invoice ID (e.g. INV-001)">
-                <input type="text" id="inpClient" placeholder="Client Name">
-                <input type="number" id="inpAmount" placeholder="Amount (ETH/USD)">
-                <input type="date" id="inpDate">
-                
-                <label style="font-size: 12px; color: #666;">Attach Invoice PDF/Image:</label>
-                <input type="file" id="inpFile">
-
-                <button id="submitInvoiceBtn" class="btn-action">Submit to Blockchain</button>
-                <p id="submitStatus" class="status-text"></p>
+            <!-- Header -->
+            <div class="header">
+                <div class="logo-row">
+                    <div class="logo-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <h1>InvoiceChain</h1>
+                </div>
+                <p class="subtitle">Decentralized Invoice Ledger on Blockchain</p>
             </div>
 
-            <div class="card">
-                <h3>Verify Invoice</h3>
-                <input type="text" id="searchId" placeholder="Enter Invoice ID">
-                <button id="verifyBtn" class="btn-secondary">Verify</button>
-                <div id="searchResult" class="result-box hidden"></div>
+            <!-- Auth Section -->
+            <div id="auth-section">
+                <button id="connectWalletBtn" class="btn-connect">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;">
+                        <path d="M20 12V22H4V12"></path>
+                        <path d="M22 7H2v5h20V7z"></path>
+                        <path d="M12 22V7"></path>
+                        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+                    </svg>
+                    Connect Wallet
+                </button>
             </div>
 
-            <div class="card">
-                <h3>My Invoices</h3>
-                <button id="refreshBtn" class="btn-small">Refresh List</button>
-                <ul id="invoiceList" class="invoice-list"></ul>
+            <!-- Wallet Badge (shown after connect) -->
+            <div id="walletAddress" class="wallet-badge hidden">
+                <span class="wallet-dot"></span>
+                <span id="walletText">Not Connected</span>
+            </div>
+
+            <!-- Dashboard -->
+            <div id="dashboard-section" class="hidden">
+
+                <div class="divider"></div>
+
+                <!-- Create Invoice Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="12" y1="18" x2="12" y2="12"></line>
+                            <line x1="9" y1="15" x2="15" y2="15"></line>
+                        </svg>
+                        <h3>Create New Invoice</h3>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Invoice ID</label>
+                        <input type="text" id="inpId" placeholder="e.g. INV-001">
+                    </div>
+                    <div class="input-group">
+                        <label>Client Name</label>
+                        <input type="text" id="inpClient" placeholder="e.g. Acme Corp">
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>Amount</label>
+                            <input type="number" id="inpAmount" placeholder="0.00">
+                        </div>
+                        <div class="input-group">
+                            <label>Date</label>
+                            <input type="date" id="inpDate">
+                        </div>
+                    </div>
+
+                    <div class="file-drop-zone" id="fileDropZone">
+                        <input type="file" id="inpFile" accept=".pdf,.png,.jpg,.jpeg">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 16 12 12 8 16"></polyline>
+                            <line x1="12" y1="12" x2="12" y2="21"></line>
+                            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
+                        </svg>
+                        <p>Drop file here or <span class="file-browse">browse</span></p>
+                        <small id="fileNameDisplay">PDF or Image — max 10MB</small>
+                    </div>
+
+                    <button id="submitInvoiceBtn" class="btn-primary">
+                        Submit to Blockchain
+                    </button>
+                    <p id="submitStatus" class="status-text"></p>
+                </div>
+
+                <!-- Verify Invoice Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <h3>Verify Invoice</h3>
+                    </div>
+                    <div class="verify-row">
+                        <input type="text" id="searchId" placeholder="Enter Invoice ID to verify">
+                        <button id="verifyBtn" class="btn-verify">Verify</button>
+                    </div>
+                    <div id="searchResult" class="result-box hidden"></div>
+                </div>
+
+                <!-- My Invoices Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                        <h3>My Invoices</h3>
+                        <button id="refreshBtn" class="btn-refresh">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                            </svg>
+                            Refresh
+                        </button>
+                    </div>
+                    <ul id="invoiceList" class="invoice-list"></ul>
+                </div>
+
             </div>
         </div>
     </div>

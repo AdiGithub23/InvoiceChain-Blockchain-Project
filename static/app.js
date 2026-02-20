@@ -1,87 +1,7 @@
-// // Global variables to hold the provider and signer
-// let provider;
-// let signer;
-// let userAddress;
-
-// // HTML Elements
-// const connectBtn = document.getElementById("connectWalletBtn");
-// const walletAddressDisplay = document.getElementById("walletAddress");
-// const dashboardSection = document.getElementById("dashboard-section");
-
-// // 1. Check if MetaMask is installed
-// window.onload = function() {
-//     if (!window.ethereum) {
-//         walletAddressDisplay.innerText = "MetaMask is not installed!";
-//         walletAddressDisplay.classList.remove("hidden");
-//         connectBtn.disabled = true;
-//         connectBtn.innerText = "Install MetaMask";
-//     }
-// };
-
-// // 2. Connect Wallet Function
-// connectBtn.addEventListener("click", async () => {
-//     try {
-//         // Initialize the Ethers provider using the window.ethereum object
-//         provider = new ethers.BrowserProvider(window.ethereum);
-        
-//         // Request account access (This triggers the MetaMask popup)
-//         signer = await provider.getSigner();
-        
-//         // Get the address
-//         userAddress = await signer.getAddress();
-        
-//         // Update UI
-//         onConnectSuccess(userAddress);
-
-//     } catch (error) {
-//         console.error("Connection Error:", error);
-//         alert("Failed to connect wallet: " + error.message);
-//     }
-// });
-
-// // 3. UI Update Helper
-// function onConnectSuccess(address) {
-//     // Hide Connect Button
-//     connectBtn.classList.add("hidden");
-    
-//     // Show Address
-//     walletAddressDisplay.innerText = "Connected: " + address;
-//     walletAddressDisplay.classList.remove("hidden");
-    
-//     // Show Dashboard
-//     dashboardSection.classList.remove("hidden");
-// }
-
-// // 4. Handle Account Changes (If user switches accounts in MetaMask)
-// if (window.ethereum) {
-//     window.ethereum.on('accountsChanged', (accounts) => {
-//         if (accounts.length > 0) {
-//             // Reload page or update UI with new account
-//             window.location.reload();
-//         } else {
-//             // User disconnected
-//             window.location.reload();
-//         }
-//     });
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-// --- CONFIGURATION ---
-// 1. PASTE YOUR CONTRACT ADDRESS HERE (Inside quotes)
+// 1. CONTRACT ADDRESS HERE
 const CONTRACT_ADDRESS = "0x3Eb9222cFCF462bBe1548f08F5aAd58871aFe355";
 
-// 2. PASTE YOUR ABI HERE (Keep the brackets [])
+// 2. ABI HERE
 const CONTRACT_ABI = [
 	{
 		"inputs": [
@@ -239,7 +159,7 @@ connectBtn.addEventListener("click", async () => {
 
         // Update UI
         connectBtn.classList.add("hidden");
-        walletDisplay.innerText = "User: " + userAddress.substring(0, 6) + "..." + userAddress.substring(38);
+        document.getElementById("walletText").innerText = userAddress.substring(0, 6) + "..." + userAddress.substring(38);
         walletDisplay.classList.remove("hidden");
         dashboard.classList.remove("hidden");
         
@@ -253,97 +173,6 @@ connectBtn.addEventListener("click", async () => {
 });
 
 // --- 3. SUBMIT INVOICE ---
-// submitBtn.addEventListener("click", async () => {
-//     const id = document.getElementById("inpId").value;
-//     const client = document.getElementById("inpClient").value;
-//     const amount = document.getElementById("inpAmount").value;
-//     const date = document.getElementById("inpDate").value;
-//     const statusTxt = document.getElementById("submitStatus");
-
-//     if (!id || !client || !amount) return alert("Please fill all fields");
-
-//     try {
-//         statusTxt.innerText = "⏳ Confirming transaction in MetaMask...";
-//         statusTxt.style.color = "blue";
-
-//         // Call Smart Contract
-//         const tx = await contract.addInvoice(id, client, amount, date);
-        
-//         statusTxt.innerText = "⏳ Mining... Please wait.";
-//         await tx.wait(); // Wait for block confirmation
-
-//         statusTxt.innerText = "✅ Success! Invoice stored on Blockchain.";
-//         statusTxt.style.color = "green";
-//         loadMyInvoices(); // Refresh list
-
-//     } catch (error) {
-//         console.error(error);
-//         // Handle "Invoice ID already exists" error
-//         if (error.reason) {
-//             statusTxt.innerText = "❌ Error: " + error.reason;
-//         } else {
-//             statusTxt.innerText = "❌ Transaction Failed (See Console)";
-//         }
-//         statusTxt.style.color = "red";
-//     }
-// });
-// submitBtn.addEventListener("click", async () => {
-//     const id = document.getElementById("inpId").value;
-//     const client = document.getElementById("inpClient").value;
-//     const amount = document.getElementById("inpAmount").value;
-//     const date = document.getElementById("inpDate").value;
-//     const fileInput = document.getElementById("inpFile");
-//     const statusTxt = document.getElementById("submitStatus");
-
-//     if (!id || !client || !amount || !date) return alert("Please fill all text fields");
-//     if (fileInput.files.length === 0) return alert("Please select a file to upload");
-
-//     try {
-//         // STEP A: Upload to IPFS (Pinata)
-//         statusTxt.innerText = "Uploading file to IPFS...";
-//         statusTxt.style.color = "blue";
-        
-//         const formData = new FormData();
-//         formData.append('file', fileInput.files[0]);
-
-//         const uploadRes = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
-//             method: "POST",
-//             headers: {
-//                 Authorization: `Bearer ${PINATA_JWT}`
-//             },
-//             body: formData
-//         });
-
-//         if (!uploadRes.ok) throw new Error("IPFS Upload Failed");
-//         const ipfsData = await uploadRes.json();
-//         const ipfsHash = ipfsData.IpfsHash;
-
-//         console.log("IPFS Hash:", ipfsHash);
-
-//         // STEP B: Save to Blockchain
-//         statusTxt.innerText = "Confirming transaction in MetaMask...";
-        
-//         // Note: We now pass 5 arguments (including ipfsHash)
-//         const tx = await contract.addInvoice(id, client, amount, date, ipfsHash);
-        
-//         statusTxt.innerText = "Mining... Please wait.";
-//         await tx.wait(); 
-
-//         statusTxt.innerText = "Success! Invoice & File stored.";
-//         statusTxt.style.color = "green";
-//         loadMyInvoices(); 
-
-//     } catch (error) {
-//         console.error(error);
-//         if (error.reason) {
-//             statusTxt.innerText = "Error: " + error.reason;
-//         } else {
-//             statusTxt.innerText = "Failed: " + error.message;
-//         }
-//         statusTxt.style.color = "red";
-//     }
-// });
-
 submitBtn.addEventListener("click", async () => {
     const id = document.getElementById("inpId").value;
     const client = document.getElementById("inpClient").value;
@@ -429,7 +258,7 @@ async function loadMyInvoices() {
 
         ids.forEach(id => {
             const li = document.createElement("li");
-            li.innerText = "# " + id;
+            li.innerText = id;
             list.appendChild(li);
         });
     } catch (error) {
@@ -439,73 +268,7 @@ async function loadMyInvoices() {
 }
 refreshBtn.addEventListener("click", loadMyInvoices);
 
-// --- 5. VERIFY / SEARCH ---
-// verifyBtn.addEventListener("click", async () => {
-//     const searchId = document.getElementById("searchId").value;
-//     const resultBox = document.getElementById("searchResult");
-    
-//     if (!searchId) return;
-
-//     try {
-//         resultBox.innerHTML = "Searching Chain...";
-//         resultBox.classList.remove("hidden");
-
-//         // Call Smart Contract
-//         // Returns: [clientName, amount, date, issuer]
-//         const data = await contract.getInvoice(searchId);
-        
-//         resultBox.innerHTML = `
-//             <strong>✅ Verified!</strong><br>
-//             Client: ${data[0]}<br>
-//             Amount: ${data[1]}<br>
-//             Date: ${data[2]}<br>
-//             <small>Owner: You</small>
-//         `;
-//         resultBox.style.backgroundColor = "#d4edda"; // Greenish
-//         resultBox.style.color = "#155724";
-
-//     } catch (error) {
-//         console.error(error);
-//         // This catches the "Access Denied" or "Not Found" error
-//         resultBox.innerHTML = "❌ Access Denied or Not Found.";
-//         resultBox.style.backgroundColor = "#f8d7da"; // Reddish
-//         resultBox.style.color = "#721c24";
-//     }
-// });
-// verifyBtn.addEventListener("click", async () => {
-//     const searchId = document.getElementById("searchId").value;
-//     const resultBox = document.getElementById("searchResult");
-    
-//     if (!searchId) return;
-
-//     try {
-//         resultBox.innerHTML = "Searching Chain...";
-//         resultBox.classList.remove("hidden");
-
-//         // Now returns: [clientName, amount, date, ipfsHash, issuer]
-//         const data = await contract.getInvoice(searchId);
-        
-//         const ipfsLink = `https://gateway.pinata.cloud/ipfs/${data[3]}`;
-
-//         resultBox.innerHTML = `
-//             <strong>Verified!</strong><br>
-//             Client: ${data[0]}<br>
-//             Amount: ${data[1]}<br>
-//             Date: ${data[2]}<br>
-//             <a href="${ipfsLink}" target="_blank" style="color:blue; text-decoration:underline;">View Invoice File</a><br>
-//             <small>Owner: You</small>
-//         `;
-//         resultBox.style.backgroundColor = "#d4edda";
-//         resultBox.style.color = "#155724";
-
-//     } catch (error) {
-//         console.error(error);
-//         resultBox.innerHTML = "Access Denied or Not Found.";
-//         resultBox.style.backgroundColor = "#f8d7da";
-//         resultBox.style.color = "#721c24";
-//     }
-// });
-
+// --- 5. VERIFY INVOICE ---
 verifyBtn.addEventListener("click", async () => {
     const searchId = document.getElementById("searchId").value;
     const resultBox = document.getElementById("searchResult");
@@ -513,52 +276,65 @@ verifyBtn.addEventListener("click", async () => {
     if (!searchId) return;
 
     try {
-        resultBox.innerHTML = "Searching Chain...";
+        resultBox.innerHTML = `<div style="color:var(--text-dim);font-family:var(--mono);font-size:12px;padding:10px 0;">Searching chain...</div>`;
+        resultBox.className = "result-box";
         resultBox.classList.remove("hidden");
 
-        // Call Smart Contract
-        // NOW RETURNS: An Array of Invoice Structs
         const invoices = await contract.getInvoice(searchId);
-        
-        // Check if any invoices were returned
+
         if (invoices.length === 0) {
-            resultBox.innerHTML = "❌ No invoices found for you with this ID.";
-            resultBox.style.backgroundColor = "#f8d7da";
-            resultBox.style.color = "#721c24";
+            resultBox.className = "result-box error-state";
+            resultBox.innerHTML = `
+                <span style="margin-right:6px;">✗</span> No invoices found for this ID.
+            `;
             return;
         }
 
-        // Clear previous results
+        resultBox.className = "result-box";
         resultBox.innerHTML = "";
-        resultBox.style.backgroundColor = "transparent"; 
 
-        // Loop through results and display them
         invoices.forEach((inv, index) => {
-            // Note: Struct comes back as an array-like object in Ethers v6
-            // [id, client, amount, date, ipfsHash, issuer]
             const ipfsLink = `https://gateway.pinata.cloud/ipfs/${inv[4]}`;
-            
             const card = document.createElement("div");
-            card.style.backgroundColor = "#d4edda";
-            card.style.color = "#155724";
-            card.style.marginBottom = "10px";
-            card.style.padding = "10px";
-            card.style.borderRadius = "5px";
-            
+            card.className = "result-card";
             card.innerHTML = `
-                <strong>✅ Result #${index + 1}</strong><br>
-                Client: ${inv[1]}<br>
-                Amount: ${inv[2]}<br>
-                Date: ${inv[3]}<br>
-                <a href="${ipfsLink}" target="_blank" style="color:blue; text-decoration:underline;">📄 View File</a>
+                <div class="result-title">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00e676" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    Verified — Result #${index + 1}
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Client</span>
+                    <span class="result-value">${inv[1]}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Amount</span>
+                    <span class="result-value">${inv[2]}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Date</span>
+                    <span class="result-value">${inv[3]}</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Document</span>
+                    <a href="${ipfsLink}" target="_blank" class="result-link">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                        View on IPFS
+                    </a>
+                </div>
             `;
             resultBox.appendChild(card);
         });
 
     } catch (error) {
         console.error(error);
-        resultBox.innerHTML = "❌ Error fetching data.";
-        resultBox.style.backgroundColor = "#f8d7da"; 
-        resultBox.style.color = "#721c24";
+        resultBox.className = "result-box error-state";
+        resultBox.classList.remove("hidden");
+        resultBox.innerHTML = `<span style="margin-right:6px;">✗</span> Error fetching data.`;
     }
+});
+
+// --- 6. FILE NAME DISPLAY ---
+document.getElementById("inpFile").addEventListener("change", function() {
+    const display = document.getElementById("fileNameDisplay");
+    display.innerText = this.files[0] ? this.files[0].name : "PDF or Image — max 10MB";
 });
